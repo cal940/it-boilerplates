@@ -1,0 +1,56 @@
+version: "2"
+
+services:
+  bookstack:
+    image: lscr.io/linuxserver/bookstack:latest
+    hostname: bookstack.local # internal hostname for this docker container (used by reverse proxy)
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - APP_URL=https://wiki.domain.tld/ # domain for the application (bookstack)
+      - APP_Key=SECRET-APP-KEY
+      - DB_HOST=bookstack_db
+      - DB_USER=bookstack
+      - DB_PASS=DB-PASSWORD
+      - DB_DATABASE=bookstackapp
+      - APP_VIEWS_BOOKS=list
+      - APP_VIEWS_BOOKSHELVES=list
+      - APP_VIEWS_BOOKSHELF=list
+      - APP_PROXIES=* # required for reverse proxy (if you use one)
+      #- ALLOWED_IFRAME_SOURCES="https://*.domain.tld"
+    volumes:
+      - bookstack_data:/config
+#    ports:
+#      - 6875:80
+    restart: unless-stopped
+    depends_on:
+      - bookstack_db
+    networks:
+      - bookstack_backend
+      - proxy_net
+      
+  bookstack_db:
+    image: mariadb
+    container_name: bookstack_db
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - MYSQL_ROOT_PASSWORD=DB-PASSWORD
+      - MYSQL_DATABASE=bookstackapp
+      - MYSQL_USER=bookstack
+      - MYSQL_PASSWORD=DB-PASSWORD
+    volumes:
+      - bookstack_db_data:/var/lib/mysql
+    networks:
+      - bookstack_backend
+    restart: unless-stopped
+
+volumes:
+   bookstack_data:
+   bookstack_db_data:
+   
+networks:
+   bookstack_backend:
+   proxy_net: # network used to route traffic from reverse proxy to container
+    external: true
+    name: proxy_net
