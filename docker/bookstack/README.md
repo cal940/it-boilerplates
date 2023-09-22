@@ -12,14 +12,14 @@
 1. Login to your reversy proxy via web interface
 2. Create new proxy host
 3. Set following settings: in tab "Details":
-   - **Domain names:** e.g. wiki.domain.tld
+   - **Domain names:** APP-DOMAIN
    - **Scheme:** http
    - **Forward Hostname / IP:** bookstack.local
    - **Forward Port:** 80
    - **Websockets Support:** on
 4. Set following settings: in tab "SSL":
-   - **SSL Certificate** Request a new SSL Certificate
-   - **Scheme:** http
-   - **Forward Hostname / IP:** bookstack.local
-   - **Forward Port:** 80
-   - **Websockets Support:** on
+   - **SSL Certificate:** Request a new SSL Certificate
+   - **Force SSL:** on
+   - **HTTP/2 Support:** 
+   - **Email Address for Let's Encrypt:** ADMIN-EMAIL
+   - **I Agree to the Let's Encrypt Terms of Service** on
