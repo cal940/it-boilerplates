@@ -1,0 +1,47 @@
+version: '3'
+services:
+  npm:
+    image: 'jc21/nginx-proxy-manager:latest'
+    ports:
+      - '80:80'
+      - '64081:81'
+      - '443:443'
+    environment:
+      DB_MYSQL_HOST: "npm-db.local"
+      DB_MYSQL_PORT: 3306
+      DB_MYSQL_USER: "npm"
+      DB_MYSQL_PASSWORD: "DB-PASSWORD"
+      DB_MYSQL_NAME: "npm"
+    volumes:
+      - proxy_manager_app:/data
+      - /etc/letsencrypt:/etc/letsencrypt # mout for ssl certificats
+    restart: always
+    hostname: "npm.local"
+    networks:
+      - proxy_backend
+      - proxy_net
+
+  db_npm:
+    hostname: "npm-db.local"
+    image: 'jc21/mariadb-aria:latest'
+    environment:
+      MYSQL_ROOT_PASSWORD: 'DB-PASSWORD'
+      MYSQL_DATABASE: 'npm'
+      MYSQL_USER: 'npm'
+      MYSQL_PASSWORD: 'DB-PASSWORD'
+    volumes:
+      - proxy_manager_db:/var/lib/mysql
+    restart: always
+    networks:
+      - proxy_backend
+
+volumes:
+    proxy_manager_app:
+    proxy_manager_db:
+
+networks:
+  proxy_backend: # network for the internal communication betwenn the app and db containers
+    external: true
+  proxy_net: # network for routing traffic from reverse proxy to the specified containers on the server
+    external: true
+    name: proxy_net
