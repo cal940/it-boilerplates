@@ -1,0 +1,53 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:13.2
+    restart: unless-stopped
+    networks:
+      - keycloak_net
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: DB-PASSWORD
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  keycloak:
+    depends_on:
+      - postgres
+    container_name: keycloak
+    hostname: keycloak.local
+    command: start --proxy=edge --hostname="auth.domain.tld" --hostname-strict-backchannel=false --features=token-exchange,impersonation,account2,admin2,update-email --db=postgres --db-url-host=postgres --db-username=keycloak --db-password="DB-PASSWORD"
+    environment:
+      DB_VENDOR: postgres
+      DB_ADDR: postgres
+      DB_DATABASE: keycloak
+      DB_USER: keycloak
+      DB_PASSWORD: DB-PASSWORD
+      VIRTUAL_HOST: auth.doamin.tld # domain for the application
+      KEYCLOAK_USER: kcadmin
+      KEYCLOAK_PASSWORD: USER-PASSWORD
+      KEYCLOAK_ADMIN: kcadmin
+      KEYCLOAK_ADMIN_PASSWORD: ADMIN-PASSWORD
+      #LETSENCRYPT_HOST: ${LETSENCRYPT_HOST}
+      #LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
+      VIRTUAL_PORT: "8080"
+      HTTPS_METHOD: redirect
+      PROXY_ADDRESS_FORWARDING: "true" # <==== very important if you use reverse proxy
+    image: keycloak/keycloak:latest
+    restart: unless-stopped
+    networks:
+      - proxy_net
+      - keycloak_net
+
+volumes:
+  postgres_data:
+
+#Use this configuration in production with nginx-proxy container
+networks:
+  keycloak_net: # network for the internal communication betwenn the app and db containers
+    external: true
+  proxy_net: # network for routing traffic from reverse proxy to the specified containers on the server
+    external: true
+    name: proxy_net
