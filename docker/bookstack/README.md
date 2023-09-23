@@ -12,7 +12,7 @@
 1. Login to your reversy proxy via web interface
 2. Create new proxy host
 3. Set following settings: in tab "Details":
-   - **Domain names:** APP-DOMAIN
+   - **Domain names:** wiki.domain.tld
    - **Scheme:** http
    - **Forward Hostname / IP:** bookstack.local
    - **Forward Port:** 80
