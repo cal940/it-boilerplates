@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: portainer
+    hostname: portainer.local
+    restart: unless-stopped
+    networks:
+      - proxy_net
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /opt/portainer/data:/data
+    ports:
+      - 64900:9000 # HTTP for initial setup
+      - 64943:9443 # HTTPS
+
+networks:
+  proxy_net: # network used to route traffic from reverse proxy to container
+    external: true
