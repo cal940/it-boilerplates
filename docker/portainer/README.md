@@ -1,5 +1,4 @@
-# How to use
-## Using the terminal
+# Installation
 1. Download the docker-compose.yml file to your system
 2. run ``docker-compose up -d`` (docker & docker-comose needs to be installed on the system)
 
