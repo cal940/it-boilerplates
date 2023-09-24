@@ -8,10 +8,11 @@
 - [RegEx Checker](https://regexr.com/)
 
 # Hosting Providers:
-- [netcup](https://www.netcup.de)
-- [uberspace](https://uberspace.de)
+- [Hetzner](https://www.hetzner.com)
+- [Netcup](https://www.netcup.de)
+- [Uberspace](https://uberspace.de)
 
 # Documentation:
 - [HTTP Status Codes Overview](https://http-status-code.de/)
-- [uberlab](https://lab.uberspace.de)
-- [uberspace docs](https://manual.uberspace.de)
+- [Uberlab](https://lab.uberspace.de)
+- [Uberspace Docs](https://manual.uberspace.de)
